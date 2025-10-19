@@ -20,13 +20,13 @@
 ## 🚀 Instalasi
 
 1. **Persiapan Awal**
-   Pastikan sudah menginstal **Node.js v18+** dan **npm**.
+   Pastikan sudah menginstal **Node.js v20+**
 
 2. **Clone Repository**
 
    ```bash
    git clone https://github.com/FlowFalcon/Lilith-Bot-s.git
-   cd nama-folder-bot
+   cd Lilith-Bot-s
    ```
 
 3. **Instal Dependensi**

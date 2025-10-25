@@ -6,7 +6,7 @@ import NodeCache from "node-cache";
 import makeWASocket, { delay, DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, proto } from "baileys";
 import pino from "pino";
 
-import { name, version, author } from "./package.json" assert { type: "json" };
+import { name, version, author } from "./package.json";
 import config from "./config.js";
 import { logTelegram, logDiscord, logError } from "./lib/logger.js";
 

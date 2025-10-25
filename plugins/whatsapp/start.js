@@ -1,4 +1,4 @@
-const os = require("os");
+import os from "os";
 
 let handler = async (m, { conn, config }) => {
   try {
@@ -38,4 +38,4 @@ handler.help = ["start"];
 handler.tags = ["main"];
 handler.command = ["start"];
 
-module.exports = handler;
+export default handler;

@@ -1,8 +1,12 @@
-const fs = require("fs");
-const path = require("path");
-const axios = require("axios");
-const FormData = require("form-data");
-const { Markup } = require("telegraf");
+import fs from "fs";
+import path from "path";
+import axios from "axios";
+import FormData from "form-data";
+import { Markup } from "telegraf";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const userState = new Map();
 
@@ -82,4 +86,4 @@ handler.setup = (bot, platform) => {
   });
 };
 
-module.exports = handler;
+export default handler;

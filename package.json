@@ -1,7 +1,7 @@
 {
   "name": "Lilith Bot's",
-  "version": "1.0.0",
-  "description": "a bot telegram & discord",
+  "version": "1.2.0",
+  "description": "a bot telegram & discord & whatsapp multi purpose",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -11,17 +11,16 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@google/genai": "^1.17.0",
     "@hapi/boom": "^9.1.4",
     "adm-zip": "^0.5.16",
     "axios": "^1.11.0",
-    "baileys": "^6.7.20",
-    "canvas": "^3.2.0",
+    "baileys": "^7.0.0-rc.6",
     "chalk": "^4.1.2",
     "cheerio": "1.1.2",
     "chokidar": "^3.5.3",
-    "cloudku-uploader": "^2.7.0",
     "discord.js": "^14.22.1",
+    "human-readable": "^3.0.3",
+    "jsdom": "^22.1.0",
     "jimp": "^1.6.0",
     "node-cache": "^5.1.2",
     "pino": "^8.15.0",

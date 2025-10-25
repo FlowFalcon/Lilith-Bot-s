@@ -149,15 +149,10 @@ let handler = async (ctx) => {
 };
 
 // 3. Metadata (Wajib untuk dimuat)
-handler.command = ["ping", "pong"]; // Perintah utama dan alias
+handler.command = ["ping"]; // Perintah utama dan alias
 handler.description = "Mengecek latensi bot ke server Telegram.";
-handler.tags = ["main", "info"]; // Kategori untuk /menu
+handler.tags = ["main"]; // Kategori untuk /menu
 handler.help = ["ping"]; // Bantuan (seringkali sama dengan nama perintah)
-
-// 4. Izin (Opsional)
-handler.permissions = {
-  ownerOnly: false, // Set 'true' jika hanya owner yang bisa pakai
-};
 
 // 5. Ekspor handler
 module.exports = handler;
@@ -176,8 +171,7 @@ Penjelasan Bagian
    * Wajib. Ini adalah array string. Elemen pertama ("ping") adalah perintah utama, dan sisanya ("pong") adalah alias.
  * handler.tags & handler.description
    * Digunakan oleh plugin menu.js untuk mengelompokkan dan memberi deskripsi perintah Anda.
- * handler.permissions
-   * Objek opsional. Sistem akan memeriksa permissions.ownerOnly.
+   * Otomatis menjadi fitur Owner Only dengan tags "owner"
    
 ### 2. 💬 Cara Membuat Plugin Discord
 Plugin Discord ditempatkan di folder plugins/discord/.
@@ -221,14 +215,13 @@ let handler = async (msgOrCtx, args) => {
 };
 
 // 5. Metadata (Wajib)
-handler.command = ["userinfo", "whois"]; // Nama perintah & alias
+handler.command = ["userinfo"]; // Nama perintah & alias
 handler.description = "Menampilkan info tentang seorang pengguna."; // Wajib untuk Slash Command
 handler.tags = ["info"];
 handler.help = ["userinfo [@user]"];
 
 // 6. Izin (Opsional)
 handler.permissions = {
-  ownerOnly: false,
   guildOnly: false, // Set 'true' jika hanya bisa di server
 };
 
@@ -257,8 +250,10 @@ Penjelasan Bagian
    * Gunakan msgOrCtx._optionsData?.nama_opsi untuk mendapatkan nilai dari opsi yang didefinisikan di handler.options.
  * Membalas Pesan
    * Gunakan msgOrCtx.reply(...). Fungsi ini sudah di-wrapper untuk menangani ix.reply() (slash) atau msg.reply() (prefix) secara otomatis.
- * handler.description
+ * handler.tags & handler.description
+   * Digunakan oleh plugin menu.js untuk mengelompokkan dan memberi deskripsi perintah Anda.
    * Wajib untuk Slash Command. Ini adalah teks yang muncul di UI Discord.
+   * Otomatis menjadi fitur Owner Only dengan tags "owner"
  * handler.options
    * Ini adalah array yang mendefinisikan opsi untuk Slash Command Anda.
    * type: Gunakan tipe data seperti "string", "integer", "user", "channel", "role", "attachment".
@@ -287,8 +282,8 @@ let handler = async (m, { conn, args, config }) => {
 };
 
 // 3. Metadata (Wajib)
-handler.command = ["ping", "pong"]; // Perintah utama dan alias
-handler.tags = ["main", "info"]; // Kategori untuk /menu
+handler.command = ["ping"]; // Perintah utama dan alias
+handler.tags = ["main"]; // Kategori untuk /menu
 handler.help = ["ping"]; // Deskripsi untuk /menu
 
 // 4. Ekspor handler

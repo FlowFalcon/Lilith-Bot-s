@@ -6,10 +6,10 @@ global.config = {
   enableWhatsApp: true, // true untuk mengaktifkan bot WhatsApp
 
   // --- BOT CONFIG ---
-     telegramToken: "TOKEN_TELEGRAM",
-     discordToken: "TOKEN_DISCORD",
-     discordClientId: "CLIENT_ID_DISCORD",
-     whatsappNumber: "628123456789", // example: 628123456789
+     telegramToken: "", // Token bot Telegram
+     discordToken: "", // Token bot Discord
+     discordClientId: "", // Client ID bot Discord
+     whatsappNumber: "", // example: 628123456789
   
   // --- OWNER CONFIG ---
   ownerTelegram: "OWNER_TELEGRAM",

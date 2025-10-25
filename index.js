@@ -12,8 +12,8 @@ const config = require("./config.js");
 const { logTelegram, logDiscord, logError } = require("./lib/logger.js");
 
 // WhatsApp Imports
-const { procMsg } = require("./lib/msg.js");
-const { prMsg } = require("./lib/fmt.js");
+const { procMsg } = require("./lib/whatsapp/msg.js");
+const { prMsg } = require("./lib/whatsapp/fmt.js");
 const CmdRegisWA = require("./lib/whatsapp/command-register.js");
 const handlerWA = require("./lib/whatsapp/command-handler.js");
 

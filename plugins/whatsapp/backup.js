@@ -1,10 +1,6 @@
-import fs from "fs";
-import path from "path";
-import AdmZip from "adm-zip";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const fs = require("fs");
+const path = require("path");
+const AdmZip = require("adm-zip");
 
 let handler = async (m, { conn, config }) => {
   try {
@@ -24,13 +20,17 @@ let handler = async (m, { conn, config }) => {
 
       const rootDir = path.join(__dirname, "..", "..");
 
-      const filesToBackup = ["index.js", "config.js", "package.json", "package-lock.json", "README.md", "LICENSE"];
+      const filesToBackup = ["index.js", "config.js", "package.json", "README.md", "LICENSE"];
       filesToBackup.forEach(file => {
         const filePath = path.join(rootDir, file);
         if (fs.existsSync(filePath)) {
           zip.addLocalFile(filePath);
         }
       });
+      
+      const sessionFile = "creds.json";
+      const sessionPath = path.join(rootDir, "sessions", sessionFile);
+      if (fs.existsSync(sessionPath)) zip.addLocalFile(sessionPath, "sessions");
 
       const foldersToBackup = ["lib", "plugins", "data"];
       foldersToBackup.forEach(folder => {
@@ -66,4 +66,4 @@ handler.help = ["backup"];
 handler.tags = ["owner"];
 handler.command = ["backup"];
 
-export default handler;
+module.exports = handler;

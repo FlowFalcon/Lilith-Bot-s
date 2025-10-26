@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+const { EmbedBuilder } = require("discord.js");
 
 let handler = async (msgOrCtx) => {
   try {
@@ -101,4 +101,4 @@ handler.help = ["menu", "help"];
 handler.tags = ["main"];
 handler.command = ["menu", "help"];
 
-export default handler;
+module.exports = handler;

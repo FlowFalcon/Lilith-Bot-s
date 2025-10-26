@@ -1,6 +1,6 @@
-import { performance } from "perf_hooks";
-import os from "os";
-import fs from "fs";
+const { performance } = require("perf_hooks");
+const os = require("os");
+const fs = require("fs"); 
 
 function formatUptime(seconds) {
   const d = Math.floor(seconds / (3600 * 24));
@@ -80,4 +80,4 @@ handler.help = ["ping"];
 handler.tags = ["info"];
 handler.command = ["ping"];
 
-export default handler;
+module.exports = handler;

@@ -155,7 +155,7 @@ handler.tags = ["main"]; // Kategori untuk /menu
 handler.help = ["ping"]; // Bantuan (seringkali sama dengan nama perintah)
 
 // 5. Ekspor handler
-export default handler;
+module.exports = handler;
 ```
 Penjelasan Bagian
  * let handler = async (ctx) => { ... }
@@ -180,7 +180,7 @@ Struktur File
 Buat file baru, misalnya plugins/discord/userinfo.js.
 ```javascript
 // plugins/discord/userinfo.js
-import { EmbedBuilder } from "discord.js"
+const { EmbedBuilder } = require("discord.js");
 
 // 1. Fungsi handler utama
 let handler = async (msgOrCtx, args) => {
@@ -236,7 +236,7 @@ handler.options = [
 ];
 
 // 8. Ekspor handler
-export default handler;
+module.exports = handler;
 ```
 Penjelasan Bagian
  * let handler = async (msgOrCtx, args) => { ... }
@@ -287,7 +287,7 @@ handler.tags = ["main"]; // Kategori untuk /menu
 handler.help = ["ping"]; // Deskripsi untuk /menu
 
 // 4. Ekspor handler
-export default handler;;
+module.exports = handler;
 ```
 Penjelasan Bagian
  * let handler = async (m, { conn, args, config }) => { ... }

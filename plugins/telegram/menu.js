@@ -1,5 +1,5 @@
-import axios from "axios";
-import { Markup } from "telegraf";
+const axios = require("axios");
+const { Markup } = require("telegraf");
 
 let handler = async (ctx) => {
   try {
@@ -188,4 +188,4 @@ handler.setup = (bot, platform) => {
    }, 600000);
 };
 
-export default handler;
+module.exports = handler;

@@ -21,4 +21,4 @@ handler.help = ["cekid", "myid"];
 handler.tags = ["info"];
 handler.command = ["cekid", "myid"];
 
-export default handler;
+module.exports = handler;

@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "Fathur",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@hapi/boom": "^9.1.4",
     "adm-zip": "^0.5.16",

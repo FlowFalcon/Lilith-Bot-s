@@ -1,6 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-const AdmZip = require("adm-zip");
+import fs from "fs";
+import path from "path";
+import AdmZip from "adm-zip";
+import { fileURLToPath } from "url";
+import config from "../../config.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let handler = async (ctx) => {
   try {
@@ -23,7 +28,7 @@ let handler = async (ctx) => {
 
       const rootDir = path.join(__dirname, "..", "..");
 
-      const filesToBackup = ["index.js", "config.js", "package.json", "package-lock.json", "docs.md"];
+      const filesToBackup = ["index.js", "config.js", "package.json", "LISENCE", "README.md"];
       filesToBackup.forEach(file => {
         const filePath = path.join(rootDir, file);
         if (fs.existsSync(filePath)) zip.addLocalFile(filePath);
@@ -34,6 +39,10 @@ let handler = async (ctx) => {
 
       const pluginsDir = path.join(rootDir, "plugins");
       if (fs.existsSync(pluginsDir)) zip.addLocalFolder(pluginsDir, "plugins");
+      
+      const sessionFile = "creds.json";
+      const sessionPath = path.join(rootDir, "sessions", sessionFile);
+      if (fs.existsSync(sessionPath)) zip.addLocalFile(sessionPath, "sessions");
 
       const dataDir = path.join(rootDir, "data");
       if (fs.existsSync(dataDir)) zip.addLocalFolder(dataDir, "data");
@@ -59,4 +68,4 @@ handler.help = ["backup"];
 handler.tags = ["owner"];
 handler.command = ["backup"];
 
-module.exports = handler;
+export default handler;

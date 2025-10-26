@@ -1,5 +1,10 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { EmbedBuilder } from "discord.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const dbPath = path.join(__dirname, "..", "..", "data", "users.json");
 const dbDir = path.dirname(dbPath);
@@ -52,8 +57,6 @@ ${userId}
 **Terakhir Dilihat**: ${now}
     `.trim();
 
-    const { EmbedBuilder } = require("discord.js");
-
     const embed = new EmbedBuilder()
       .setDescription(message)  
       .setColor(0x00AE86)
@@ -70,4 +73,4 @@ handler.help = ["cekid"];
 handler.tags = ["info"];
 handler.command = ["cekid"];
 
-module.exports = handler;
+export default handler;

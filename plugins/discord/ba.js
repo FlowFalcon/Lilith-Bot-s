@@ -1,4 +1,5 @@
-const axios = require("axios");
+import axios from "axios";
+import { AttachmentBuilder, EmbedBuilder } from "discord.js";
 
 const API = "https://fathurweb.qzz.io/api/r/ba";
 
@@ -30,7 +31,6 @@ let handler = async (msg) => {
 
     const ext = extFrom(ctype);
 
-    const { AttachmentBuilder, EmbedBuilder } = require("discord.js");
     const file = new AttachmentBuilder(buf, { name: `blue-archive.${ext}` });
     const embed = new EmbedBuilder()
       .setColor(0x5865f2)
@@ -52,4 +52,4 @@ handler.help = ["bluearchive"];
 handler.tags = ["anime"];
 handler.command = ["bluearchive"];
 
-module.exports = handler;
+export default handler;

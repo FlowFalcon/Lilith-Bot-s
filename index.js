@@ -1,37 +1,39 @@
-const { Telegraf, session } = require("telegraf");
-const { Client, GatewayIntentBits } = require("discord.js");
-const chalk = require("chalk");
-const { Boom } = require("@hapi/boom");
-const NodeCache = require("node-cache");
-const makeWASocket = require("baileys").default;
-const { delay, DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, proto } = require("baileys");
-const pino = require("pino");
+import { Telegraf, session } from "telegraf";
+import { Client, GatewayIntentBits } from "discord.js";
+import chalk from "chalk";
+import { Boom } from "@hapi/boom";
+import NodeCache from "node-cache";
+import makeWASocket, { delay, DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, proto } from "baileys";
+import pino from "pino";
 
-const { name, version, author } = require("./package.json");
-const config = require("./config.js");
-const { logTelegram, logDiscord, logError } = require("./lib/logger.js");
+import pkg from "./package.json" assert { type: "json" };
+const { name, version, author } = pkg;
+import config from "./config.js";
+import { logTelegram, logDiscord, logError } from "./lib/logger.js";
 
 // WhatsApp Imports
-const { procMsg } = require("./lib/whatsapp/msg.js");
-const { prMsg } = require("./lib/whatsapp/fmt.js");
-const CmdRegisWA = require("./lib/whatsapp/command-register.js");
-const handlerWA = require("./lib/whatsapp/command-handler.js");
+import { procMsg } from "./lib/whatsapp/msg.js";
+import { prMsg } from "./lib/whatsapp/fmt.js";
+import CmdRegisWA from "./lib/whatsapp/command-register.js";
+import handlerWA from "./lib/whatsapp/command-handler.js";
 
 // Telegram Imports
-const CommandRegisterTelegram = require("./lib/telegram/command-register.js");
-const { handleMessage: handleTelegramMessage } = require("./lib/telegram/command-handler.js");
+import CommandRegisterTelegram from "./lib/telegram/command-register.js";
+import { handleMessage as handleTelegramMessage } from "./lib/telegram/command-handler.js";
 
 // Discord Imports
-const CommandRegisterDiscord = require("./lib/discord/command-register.js");
-const { handleInteraction: handleDiscordInteraction, handleMessage: handleDiscordMessage } = require("./lib/discord/command-handler.js");
+import CommandRegisterDiscord from "./lib/discord/command-register.js";
+import { handleInteraction as handleDiscordInteraction, handleMessage as handleDiscordMessage } from "./lib/discord/command-handler.js";
 
 const has = (v) => v !== undefined && v !== null && v !== "";
 
 function showWelcome() {
+  console.clear
     console.log(chalk.bold.cyan("======================================="));
-    console.log(chalk.bold.green(` ${config.botName || name} v${version}`));
-    console.log(chalk.gray(` Dibuat oleh: ${config.ownerName || author}`));
-    console.log(chalk.gray(" Repository:https://github.com/FlowFalcon/Lilith-Bot-s.git"));
+    console.log(chalk.bold.green(`${config.botName || name} v${version}`));
+    console.log(chalk.gray(`Dibuat oleh: ${config.ownerName || author}`));
+    console.log(chalk.gray("Type: ESModule"))
+    console.log(chalk.gray("Repository:https://github.com/FlowFalcon/Lilith-Bot-s.git"));
     console.log(chalk.red("JANGAN PERNAH MENJUAL SCRIPT INI KARENA GRATIS!"));
     console.log(chalk.bold.cyan("======================================="));
 

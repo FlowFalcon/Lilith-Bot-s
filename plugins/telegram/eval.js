@@ -1,6 +1,6 @@
-const util = require("node:util");
-const vm = require("node:vm");
-const { config } = require("node:process");
+import util from "node:util";
+import vm from "node:vm";
+import config from "../../config.js";
 
 let handler = async (ctx) => {
   try {
@@ -55,4 +55,4 @@ handler.help = ["eval"];
 handler.tags = ["owner"];
 handler.command = ["eval"];
 
-module.exports = handler;
+export default handler;

@@ -49,4 +49,4 @@ handler.help = ["menu", "help"];
 handler.tags = ["main"];
 handler.command = ["menu", "help"];
 
-export default handler;
+module.exports = handler;

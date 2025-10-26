@@ -1,9 +1,8 @@
-import util from "node:util";
-import vm from "node:vm";
-import axios from "axios";
-import FormData from "form-data";
-import config from "../../config.js";
-import { EmbedBuilder } from "discord.js";
+const util = require("node:util");
+const vm = require("node:vm");
+const axios = require("axios");
+const FormData = require("form-data");
+const { config } = require("../../config.js");
 
 let handler = async (msg) => {
   try {
@@ -48,7 +47,8 @@ let handler = async (msg) => {
       (error ? `❌ error:\n${block(error)}`
              : `✅ result:\n${block(util.inspect(result, { depth }))}`);
 
-    return msg.channel.send({ embeds: [ new EmbedBuilder().setColor(0x2ecc71).setDescription(out) ] });
+    const { EmbedBuilder } = require("discord.js");
+    return ctx.channel.send({ embeds: [ new EmbedBuilder().setColor(0x2ecc71).setDescription(out) ] });
   } catch (e) {
     msg.reply(e.message);
   }
@@ -59,4 +59,4 @@ handler.help = ["eval"];
 handler.tags = ["owner"];
 handler.command = ["eval"];
 
-export default handler;
+module.exports = handler;

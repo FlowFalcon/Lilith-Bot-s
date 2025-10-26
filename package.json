@@ -1,6 +1,6 @@
 {
   "name": "Lilith Bot's",
-  "version": "1.2.0",
+  "version": "1.2.3",
   "description": "a bot telegram & discord & whatsapp multi purpose",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "Fathur",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "@hapi/boom": "^9.1.4",
     "adm-zip": "^0.5.16",

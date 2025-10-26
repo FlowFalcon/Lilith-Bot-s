@@ -1,7 +1,5 @@
-import axios from "axios";
-import human from 'human-readable';
-
-const { sizeFormatter } = human;
+const axios = require("axios");
+const { sizeFormatter } = require('human-readable');
 
 const formatSize = sizeFormatter({
   std: 'JEDEC', 
@@ -118,4 +116,4 @@ async function handler(m, { conn, args }) {
 handler.help = ['play <judul> [-mp3|-mp4]']
 handler.command = ['play', 'ytplay']
 handler.tags = ['search', 'downloader']
-export default handler;
+module.exports = handler;

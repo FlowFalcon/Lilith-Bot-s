@@ -1,5 +1,5 @@
-import axios from "axios";
-import FormData from "form-data";
+const axios = require("axios");
+const FormData = require("form-data");
 
 async function upscale(buffer, scale) {
   const form = new FormData();
@@ -58,4 +58,4 @@ handler.help = ["hdr <2|4>"];
 handler.tags = ["tools"];
 handler.command = ["hdr", "upscale"];
 
-export default handler;
+module.exports = handler;

@@ -1,38 +1,37 @@
-import { Telegraf, session } from "telegraf";
-import { Client, GatewayIntentBits } from "discord.js";
-import chalk from "chalk";
-import { Boom } from "@hapi/boom";
-import NodeCache from "node-cache";
-import makeWASocket, { delay, DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, proto } from "baileys";
-import pino from "pino";
+const { Telegraf, session } = require("telegraf");
+const { Client, GatewayIntentBits } = require("discord.js");
+const chalk = require("chalk");
+const { Boom } = require("@hapi/boom");
+const NodeCache = require("node-cache");
+const makeWASocket = require("baileys").default;
+const { delay, DisconnectReason, useMultiFileAuthState, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, proto } = require("baileys");
+const pino = require("pino");
 
-import pkg from "./package.json" assert { type: "json" };
-const { name, version, author } = pkg;
-import config from "./config.js";
-import { logTelegram, logDiscord, logError } from "./lib/logger.js";
+const { name, version, author } = require("./package.json");
+const config = require("./config.js");
+const { logTelegram, logDiscord, logError } = require("./lib/logger.js");
 
 // WhatsApp Imports
-import { procMsg } from "./lib/whatsapp/msg.js";
-import { prMsg } from "./lib/whatsapp/fmt.js";
-import CmdRegisWA from "./lib/whatsapp/command-register.js";
-import handlerWA from "./lib/whatsapp/command-handler.js";
+const { procMsg } = require("./lib/whatsapp/msg.js");
+const { prMsg } = require("./lib/whatsapp/fmt.js");
+const CmdRegisWA = require("./lib/whatsapp/command-register.js");
+const handlerWA = require("./lib/whatsapp/command-handler.js");
 
 // Telegram Imports
-import CommandRegisterTelegram from "./lib/telegram/command-register.js";
-import { handleMessage as handleTelegramMessage } from "./lib/telegram/command-handler.js";
+const CommandRegisterTelegram = require("./lib/telegram/command-register.js");
+const { handleMessage: handleTelegramMessage } = require("./lib/telegram/command-handler.js");
 
 // Discord Imports
-import CommandRegisterDiscord from "./lib/discord/command-register.js";
-import { handleInteraction as handleDiscordInteraction, handleMessage as handleDiscordMessage } from "./lib/discord/command-handler.js";
+const CommandRegisterDiscord = require("./lib/discord/command-register.js");
+const { handleInteraction: handleDiscordInteraction, handleMessage: handleDiscordMessage } = require("./lib/discord/command-handler.js");
 
 const has = (v) => v !== undefined && v !== null && v !== "";
 
 function showWelcome() {
-  console.clear
     console.log(chalk.bold.cyan("======================================="));
-    console.log(chalk.bold.green(`${config.botName || name} v${version}`));
+    console.log(chalk.bold.green(` ${config.botName || name} v${version}`));
     console.log(chalk.gray(`Dibuat oleh: ${config.ownerName || author}`));
-    console.log(chalk.gray("Type: ESModule"))
+    console.log(chalk.gray("TYPE: CommonJS"))
     console.log(chalk.gray("Repository:https://github.com/FlowFalcon/Lilith-Bot-s.git"));
     console.log(chalk.red("JANGAN PERNAH MENJUAL SCRIPT INI KARENA GRATIS!"));
     console.log(chalk.bold.cyan("======================================="));
@@ -247,6 +246,46 @@ async function startWhatsapp() {
                 }
             }
         }
+
+if (events["groups.update"]) {
+    const updates = events["groups.update"];
+    for (const update of updates) {
+        const id = update.id;
+        if (!id) continue;
+        
+        try {
+            console.log(`[GROUPS.UPDATE] Updating metadata for ${id}`);
+            const metadata = await whatsapp.groupMetadata(id);
+            
+            // ✅ Simpan ke localStore
+            localStore.groupMetadata[id] = metadata;
+            
+            console.log(`[GROUPS.UPDATE] Updated ${id} - ${metadata.participants?.length || 0} participants`);
+        } catch (error) {
+            console.error(`[GROUPS.UPDATE] Error updating group ${id}:`, error.message);
+        }
+    }
+}
+
+// ✅ Update untuk group-participants.update
+if (events["group-participants.update"]) {
+    const { id, participants, action } = events["group-participants.update"];
+    
+    if (id) {
+        try {
+            console.log(`[GROUP-PARTICIPANTS.UPDATE] ${action} in ${id}: ${participants.join(', ')}`);
+            
+            // ✅ Fetch metadata terbaru
+            const metadata = await whatsapp.groupMetadata(id);
+            localStore.groupMetadata[id] = metadata;
+            
+            console.log(`[GROUP-PARTICIPANTS.UPDATE] Metadata refreshed for ${id}`);
+        } catch (error) {
+            console.error(`[GROUP-PARTICIPANTS.UPDATE] Error processing group ${id}:`, error.message);
+        }
+    }
+}
+
     });
 
     return whatsapp;

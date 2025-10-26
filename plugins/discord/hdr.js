@@ -1,7 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const axios = require("axios");
-const FormData = require("form-data");
+import fs from "fs";
+import path from "path";
+import axios from "axios";
+import FormData from "form-data";
+import { AttachmentBuilder, EmbedBuilder } from "discord.js";
 
 async function upscale(buffer, scale) {
   const form = new FormData();
@@ -18,7 +19,6 @@ async function upscale(buffer, scale) {
 
 let handler = async (msg) => {
   try {
-    const { AttachmentBuilder, EmbedBuilder } = require("discord.js");
     
     // Simplified argument parsing
     const args = msg.content.slice(process.env.PREFIX.length).trim().split(/ +/);
@@ -59,4 +59,4 @@ handler.help = ["hdr"];
 handler.tags = ["tools"];
 handler.command = ["hdr"];
 
-module.exports = handler;
+export default handler;

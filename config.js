@@ -22,4 +22,4 @@ const config = {
   botName: "Lilith Bot's",
 };
 
-export default config;
+module.exports = config;

@@ -21,7 +21,7 @@ let handler = async (m, { conn, args }) => {
       scale = "2"; 
     }
     const q = m.quoted;
-    if (!q || q.mtype !== 'imageMessage') {
+    if (!q || q.type !== 'imageMessage') {
       return m.reply(`Kirim/reply gambar dengan caption *.hdr ${scale}* atau *.hdr 4*`);
     }
 

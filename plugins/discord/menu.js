@@ -8,7 +8,7 @@ let handler = async (msgOrCtx) => {
     const isOwner = String(user.id) === String(client?.config?.ownerDiscord || process.env.OWNER_ID_DISCORD); // Dapatkan status owner
 
     const registry = client?.commands || new Map();
-    const thumbnailUrl = "https://files.cloudkuimages.guru/images/Xa6scHBF.jpg";
+    const thumbnailUrl = "https://files.catbox.moe/x98vn2.jpg";
 
     const commandsByCategory = {};
     const ownerCommands = [];

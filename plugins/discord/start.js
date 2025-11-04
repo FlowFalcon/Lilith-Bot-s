@@ -10,7 +10,7 @@ let handler = async (msg) => {
 
     const botName = msg.client.user.username || "Bot";
     const userName = msg.author.username || "User";
-    const thumbnailUrl = "https://files.cloudkuimages.guru/images/Xa6scHBF.jpg";
+    const thumbnailUrl = "https://files.catbox.moe/x98vn2.jpg";
 
     // Server Info
     const cpu = os.cpus()[0];

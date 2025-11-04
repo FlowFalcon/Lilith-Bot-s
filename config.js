@@ -1,4 +1,4 @@
-const config = {
+global.config = {
   // --- PLATFORM SETTING ---
   // Atur ke 'true' untuk mengaktifkan, 'false' untuk menonaktifkan
   enableTelegram: true, // true untuk mengaktifkan bot Telegram
@@ -22,4 +22,4 @@ const config = {
   botName: "Lilith Bot's",
 };
 
-module.exports = config;
+module.exports = global.config;

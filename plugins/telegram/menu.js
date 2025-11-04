@@ -1,10 +1,10 @@
-import axios from "axios";
-import { Markup } from "telegraf";
+const axios = require("axios");
+const { Markup } = require("telegraf");
 
 let handler = async (ctx) => {
   try {
     const registry = ctx._client?.commands || new Map();
-    const thumbnailUrl = "https://files.cloudkuimages.guru/images/Xa6scHBF.jpg";
+    const thumbnailUrl = "https://files.catbox.moe/x98vn2.jpg";
     const isOwner = String(ctx.from?.id) === String(ctx._client?.config?.ownerTelegram);
     const commandsByCategory = {};
     const ownerCommands = [];
@@ -188,4 +188,4 @@ handler.setup = (bot, platform) => {
    }, 600000);
 };
 
-export default handler;
+module.exports = handler;

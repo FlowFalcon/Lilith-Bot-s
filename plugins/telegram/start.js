@@ -1,4 +1,4 @@
-import os from "os";
+const os = require("os");
 
 let handler = async (ctx) => {
   try {
@@ -7,7 +7,7 @@ let handler = async (ctx) => {
     username = ctx.from.username || ctx.from.first_name;
     const botName = ctx._client.botName || "Bot";
     const userName = ctx.from.first_name || "User";
-    const thumbnailUrl = "https://files.cloudkuimages.guru/images/Xa6scHBF.jpg";
+    const thumbnailUrl = "https://files.catbox.moe/x98vn2.jpg";
 
     // Server Info
     const cpu = os.cpus()[0];
@@ -42,4 +42,4 @@ handler.help = ["start"];
 handler.tags = ["main"];
 handler.command = ["start"];
 
-export default handler;
+module.exports = handler;

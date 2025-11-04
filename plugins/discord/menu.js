@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+const { EmbedBuilder } = require("discord.js");
 
 let handler = async (msgOrCtx) => {
   try {
@@ -8,7 +8,7 @@ let handler = async (msgOrCtx) => {
     const isOwner = String(user.id) === String(client?.config?.ownerDiscord || process.env.OWNER_ID_DISCORD); // Dapatkan status owner
 
     const registry = client?.commands || new Map();
-    const thumbnailUrl = "https://files.cloudkuimages.guru/images/Xa6scHBF.jpg";
+    const thumbnailUrl = "https://files.catbox.moe/x98vn2.jpg";
 
     const commandsByCategory = {};
     const ownerCommands = [];
@@ -101,4 +101,4 @@ handler.help = ["menu", "help"];
 handler.tags = ["main"];
 handler.command = ["menu", "help"];
 
-export default handler;
+module.exports = handler;

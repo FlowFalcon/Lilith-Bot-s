@@ -1,5 +1,5 @@
-import axios from "axios";
-import FormData from "form-data";
+const axios = require("axios");
+const FormData = require("form-data");
 
 async function upscale(buffer, scale) {
   const form = new FormData();
@@ -21,7 +21,7 @@ let handler = async (m, { conn, args }) => {
       scale = "2"; 
     }
     const q = m.quoted;
-    if (!q || q.mtype !== 'imageMessage') {
+    if (!q || q.type !== 'imageMessage') {
       return m.reply(`Kirim/reply gambar dengan caption *.hdr ${scale}* atau *.hdr 4*`);
     }
 
@@ -58,4 +58,4 @@ handler.help = ["hdr <2|4>"];
 handler.tags = ["tools"];
 handler.command = ["hdr", "upscale"];
 
-export default handler;
+module.exports = handler;

@@ -1,5 +1,5 @@
-import os from "os";
-import { EmbedBuilder } from "discord.js";
+const os = require("os");
+const { EmbedBuilder } = require("discord.js");
 
 let handler = async (msg) => {
   try {
@@ -10,7 +10,7 @@ let handler = async (msg) => {
 
     const botName = msg.client.user.username || "Bot";
     const userName = msg.author.username || "User";
-    const thumbnailUrl = "https://files.cloudkuimages.guru/images/Xa6scHBF.jpg";
+    const thumbnailUrl = "https://files.catbox.moe/x98vn2.jpg";
 
     // Server Info
     const cpu = os.cpus()[0];
@@ -19,7 +19,7 @@ let handler = async (msg) => {
 
     const embed = new EmbedBuilder()
       .setTitle(`Hello, ${userName}!`)
-      .setDescription(`I am ${botName}, ready to serve you.`)
+      .setDescription(`I am ${botName}, ready to serve you.`) 
       .setThumbnail(thumbnailUrl)
       .setColor(0x5865F2)
       .addFields(
@@ -39,4 +39,4 @@ handler.help = ["start"];
 handler.tags = ["main"];
 handler.command = ["start"];
 
-export default handler;
+module.exports = handler;

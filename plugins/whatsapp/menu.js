@@ -1,8 +1,9 @@
 let handler = async (m, { conn, config, commands }) => {
   try {
     const ownerNumber = config.ownerWhatsapp ? config.ownerWhatsapp.toString() : "";
-    const isOwner = m.sender.split('@')[0] === ownerNumber;
-    const thumbnailUrl = "https://files.cloudkuimages.guru/images/Xa6scHBF.jpg";
+    const senderNumber = m.sender.split('@')[0];
+    const isOwner = senderNumber === ownerNumber;
+    const thumbnailUrl = "https://files.catbox.moe/x98vn2.jpg";
 
     const commandsByCategory = {};
     commands.forEach(command => {
@@ -20,6 +21,25 @@ let handler = async (m, { conn, config, commands }) => {
     });
 
     let menuText = `*${config.botName || 'Bot'} - Command Menu*\n\n`;
+    
+    menuText += `*👤 User Info:*\n`;
+    menuText += `• Name: ${m.pushName}\n`;
+    menuText += `• ID: ${senderNumber}\n`;
+    
+    if (m.key?.participant?.endsWith("@lid")) {
+        menuText += `• Device: Linked Device\n`;
+    } else {
+        menuText += `• Device: ${m.device}\n`;
+    }
+    
+    if (isOwner) {
+        menuText += `• Status: Owner\n`;
+    } else {
+        menuText += `• Status: User\n`;
+    }
+    
+    menuText += `\n`;
+    
     const categories = Object.keys(commandsByCategory).sort();
 
     for (const category of categories) {
@@ -31,10 +51,10 @@ let handler = async (m, { conn, config, commands }) => {
         for (const command of categoryCommands) {
             menuText += `- /${command.name}\n`;
         }
-        menuText += '\n';
     }
 
-    menuText += `Ketik /<perintah> untuk menggunakan.`;
+    menuText += `\nKetik /<perintah> untuk menggunakan.\n`;
+    menuText += `Total: ${commands.length} commands`;
                 
     await conn.sendMessage(m.chat, {
         image: { url: thumbnailUrl },
@@ -49,4 +69,4 @@ handler.help = ["menu", "help"];
 handler.tags = ["main"];
 handler.command = ["menu", "help"];
 
-export default handler;
+module.exports = handler;

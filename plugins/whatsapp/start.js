@@ -1,10 +1,10 @@
-import os from "os";
+const os = require("os");
 
 let handler = async (m, { conn, config }) => {
   try {
     const botName = config.botName || "Bot";
     const userName = m.pushName || "User";
-    const thumbnailUrl = "https://files.cloudkuimages.guru/images/Xa6scHBF.jpg";
+    const thumbnailUrl = "https://files.catbox.moe/x98vn2.jpg";
 
     const cpu = os.cpus()[0];
     const totalMem = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
@@ -38,4 +38,4 @@ handler.help = ["start"];
 handler.tags = ["main"];
 handler.command = ["start"];
 
-export default handler;
+module.exports = handler;

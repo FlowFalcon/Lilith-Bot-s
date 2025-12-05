@@ -48,7 +48,7 @@ Sebelum memulai, pastikan Anda telah menginstal:
 
 1.  **Clone Repository**
     ```bash
-    git clone [https://github.com/FlowFalcon/Lilith-Bot-s.git](https://github.com/FlowFalcon/Lilith-Bot-s.git)
+    git clone https://github.com/FlowFalcon/Lilith-Bot-s.git
     cd Lilith-Bot-s
     ```
 
@@ -58,7 +58,7 @@ Sebelum memulai, pastikan Anda telah menginstal:
     ```
 
 3.  **Konfigurasi Bot**
-    Salin file `config.js.example` (jika ada) atau edit langsung `config.js`:
+    edit file `config.js`:
     ```javascript
     global.config = {
       // --- PLATFORM SWITCH ---
@@ -116,8 +116,8 @@ lilith-bot/
 
 Sistem plugin Lilith Bot sangat fleksibel. Berikut adalah contoh cara membuat fitur sederhana.
 
-\<details\>
-\<summary\>\<b\>🟢 Klik untuk melihat contoh Plugin WhatsApp\</b\>\</summary\>
+<details>
+<summary><b>🟢 Klik untuk melihat contoh Plugin WhatsApp</b></summary>
 
 Buat file baru di `bot/plugins/whatsapp/contoh.js`:
 
@@ -134,10 +134,10 @@ handler.help = ["halo"];          // Deskripsi di menu
 module.exports = handler;
 ```
 
-\</details\>
+</details>
 
-\<details\>
-\<summary\>\<b\>🔵 Klik untuk melihat contoh Plugin Telegram\</b\>\</summary\>
+<details>
+<summary><b>🔵 Klik untuk melihat contoh Plugin Telegram</b></summary>
 
 Buat file baru di `bot/plugins/telegram/contoh.js`:
 
@@ -153,12 +153,12 @@ handler.help = ["halo"];
 module.exports = handler;
 ```
 
-\</details\>
+</details>
 
-\<details\>
-\<summary\>\<b\>🟣 Klik untuk melihat contoh Plugin Discord\</b\>\</summary\>
+<details>
+<summary><b>🟣 Klik untuk melihat contoh Plugin Discord</b></summary>
 
-Buat file baru di `bot/plugins/discord/contoh.js`. Script ini mendukung **Slash Command** (`/halo`) dan **Prefix** (`.halo`) sekaligus\!
+Buat file baru di `bot/plugins/discord/contoh.js`. Script ini mendukung **Slash Command** (`/halo`) dan **Prefix** (`.halo`) sekaligus!
 
 ```javascript
 let handler = async (msgOrCtx, args) => {
@@ -173,7 +173,7 @@ handler.tags = ["main"];
 module.exports = handler;
 ```
 
-\</details\>
+</details>
 
 -----
 

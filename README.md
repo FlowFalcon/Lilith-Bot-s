@@ -1,7 +1,7 @@
 # 🌌 Lilith Bot's (Multi-Platform)
 
 <div align="center">
-  <img src="img/p0.jpg" alt="Lilith Bot Banner" width="100%" style="border-radius: 10px;"/>
+  <img src="img/p0.ppg" alt="Lilith Bot Banner" width="100%" style="border-radius: 10px;"/>
   <br/><br/>
   
   [![Node.js](https://img.shields.io/badge/Node.js-v20+-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)

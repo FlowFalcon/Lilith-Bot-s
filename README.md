@@ -30,7 +30,6 @@ Dilengkapi dengan **AiDev** (Asisten Coding berbasis Gemini AI), **Media Downloa
 | 🧠 **AiDev Assistant** | Asisten coding & chat pintar berbasis **Google Gemini 2.0 Flash**. Memiliki memori percakapan (Session). | ✅ Semua |
 | 📥 **Universal Downloader** | Download video **TikTok** (No WM), YouTube, dan platform lainnya dengan cepat. | ✅ Semua |
 | 🖼️ **Image Tools** | HD/Upscale gambar, Fake Story Generator, dan manipulasi gambar lainnya. | ✅ Semua |
-| 🎮 **Fun & RPG** | Sistem tabungan, tebak-tebakan, dan fitur interaktif grup. | ✅ WA |
 | 🔌 **Modular System** | Tambah fitur cukup dengan membuat file `.js` baru di folder plugins. | ⚙️ Core |
 | 🔄 **Hot-Reload** | Update script plugin secara *real-time* tanpa restart server. | ⚙️ Core |
 

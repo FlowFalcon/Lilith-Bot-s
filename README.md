@@ -48,7 +48,7 @@ Sebelum memulai, pastikan Anda telah menginstal:
 
 1.  **Clone Repository**
     ```bash
-    git clone [https://github.com/FlowFalcon/Lilith-Bot-s.git](https://github.com/FlowFalcon/Lilith-Bot-s.git)
+    git clone https://github.com/FlowFalcon/Lilith-Bot-s.git
     cd Lilith-Bot-s
     ```
 
@@ -58,7 +58,7 @@ Sebelum memulai, pastikan Anda telah menginstal:
     ```
 
 3.  **Konfigurasi Bot**
-    Salin file `config.js.example` (jika ada) atau edit langsung `config.js`:
+    edit file `config.js`:
     ```javascript
     global.config = {
       // --- PLATFORM SWITCH ---
@@ -104,7 +104,7 @@ lilith-bot/
 │   │   ├── discord/      # Plugin khusus Discord
 │   │   ├── telegram/     # Plugin khusus Telegram
 │   │   └── whatsapp/     # Plugin khusus WhatsApp
-│   ├── sessions/         # Penyimpanan sesi login (WA/Tele)
+│   ├── sessions/         # Penyimpanan sesi login (WA)
 │   ├── config.js         # Konfigurasi utama
 │   └── index.js          # Main entry point
 └── package.json
@@ -179,7 +179,7 @@ module.exports = handler;
 
 ## 🤝 Kontribusi & Credits
 
-Dibuat dengan ❤️ oleh **Fathur** (FlowFalcon).
+Dibuat dengan ❤️ oleh **Fathur**.
 Terima kasih kepada komunitas open-source untuk library luar biasa:
 
   * [Baileys](https://github.com/WhiskeySockets/Baileys)

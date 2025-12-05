@@ -11,365 +11,286 @@ const { name, version, author } = require("./package.json");
 const config = require("./config.js");
 const { logTelegram, logDiscord, logError } = require("./lib/logger.js");
 
-// WhatsApp Imports
+// whatsapp lib
 const { procMsg } = require("./lib/whatsapp/msg.js");
 const { prMsg } = require("./lib/whatsapp/fmt.js");
 const CmdRegisWA = require("./lib/whatsapp/command-register.js");
 const handlerWA = require("./lib/whatsapp/command-handler.js");
+const SessionCleaner = require("./lib/whatsapp/session-cleaner.js");
+const MessageStore = require("./lib/whatsapp/message-store.js");
+const GroupCache = require("./lib/whatsapp/group-cache.js");
 
-// Telegram Imports
+// telegram & discord lib
 const CommandRegisterTelegram = require("./lib/telegram/command-register.js");
 const { handleMessage: handleTelegramMessage } = require("./lib/telegram/command-handler.js");
-
-// Discord Imports
 const CommandRegisterDiscord = require("./lib/discord/command-register.js");
 const { handleInteraction: handleDiscordInteraction, handleMessage: handleDiscordMessage } = require("./lib/discord/command-handler.js");
 
 const has = (v) => v !== undefined && v !== null && v !== "";
+const path = require("path");
+global.root = (...args) => path.join(process.cwd(), ...args);
 
 function showWelcome() {
     console.log(chalk.bold.cyan("======================================="));
     console.log(chalk.bold.green(` ${config.botName || name} v${version}`));
     console.log(chalk.gray(`Dibuat oleh: ${config.ownerName || author}`));
-    console.log(chalk.gray("TYPE: CommonJS"))
-    console.log(chalk.gray("Repository: https://fathurweb.qzz.io/lilith-bot-s"));
-    console.log(chalk.red("JANGAN PERNAH MENJUAL SCRIPT INI KARENA GRATIS!"));
+    console.log(chalk.gray("TYPE: CommonJS"));
+    console.log(chalk.red("JANGAN DIPERJUALBELIKAN!"));
     console.log(chalk.bold.cyan("======================================="));
 
     const platforms = [];
-    let tgReady = false;
-    let dcReady = false;
-    let waReady = false;
+    if (config.enableTelegram && has(config.telegramToken)) platforms.push(chalk.green("✔ Telegram"));
+    if (config.enableDiscord && has(config.discordToken)) platforms.push(chalk.green("✔ Discord"));
+    if (config.enableWhatsApp) platforms.push(chalk.green("✔ WhatsApp"));
 
-    if (config.enableTelegram) {
-        tgReady = has(config.telegramToken);
-        platforms.push(tgReady ? chalk.green("✔ Telegram") : chalk.red("✖ Telegram (Token Hilang)"));
-    }
-    if (config.enableDiscord) {
-        dcReady = has(config.discordToken) && has(config.discordClientId);
-        platforms.push(dcReady ? chalk.green("✔ Discord") : chalk.red("✖ Discord (Token/Client ID Hilang)"));
-    }
-    if (config.enableWhatsApp) {
-        waReady = true;
-        platforms.push(chalk.green("✔ WhatsApp"));
-    }
-
-    console.log(chalk.bold("Platform Dikonfigurasi:"));
-    if (platforms.length > 0) {
-        platforms.forEach(p => console.log(` - ${p}`));
-    } else {
-        console.log(chalk.yellow("  (Tidak ada platform yang diaktifkan)"));
-    }
-    console.log(chalk.bold.cyan("======================================="));
-
-    const anyPlatformEnabled = config.enableTelegram || config.enableDiscord || config.enableWhatsApp;
-    const anyPlatformReady = tgReady || dcReady || waReady;
-
-    if (!anyPlatformEnabled) {
-        console.log(chalk.bold.red("\n[STARTUP DIBATALKAN]"));
-        console.log(chalk.yellow("Semua platform di-nonaktifkan di 'config.js'."));
-        console.log(chalk.yellow("Bot tidak akan terhubung."));
+    if (platforms.length === 0) {
+        console.log(chalk.red("[ERROR] Tidak ada platform yang aktif/dikonfigurasi di config.js."));
         return false;
     }
-
-    if (!anyPlatformReady) {
-        console.log(chalk.bold.red("\n[STARTUP DIBATALKAN]"));
-        console.log(chalk.yellow("Platform diaktifkan, tetapi Token/ID yang diperlukan belum diisi."));
-        console.log(chalk.yellow("Silakan periksa file 'config.js' Anda."));
-        return false;
-    }
-
-    console.log(chalk.cyan("\nInisialisasi bot dalam 2 detik..."));
+    
+    console.log(chalk.bold("Platform Aktif:"));
+    platforms.forEach(p => console.log(` - ${p}`));
+    console.log(chalk.bold.cyan("=======================================\n"));
     return true;
 }
 
-// ---------- TELEGRAM ----------
+// telegram bot
 async function startTelegram() {
   if (!has(config.telegramToken)) {
-    console.warn("Missing telegramToken in config.js, skipping Telegram bot.");
-    return null;
+      console.warn(chalk.yellow("[TELEGRAM] Token tidak ditemukan, melewati..."));
+      return;
   }
-  const tg = new Telegraf(config.telegramToken);
-  tg.use(session());
+  
+  try {
+      const tg = new Telegraf(config.telegramToken);
+      tg.use(session());
+      tg.botName = config.botName;
 
-  tg.botName = config.botName;
-  tg.ownerName = config.ownerName;
+      const cmdRegister = new CommandRegisterTelegram(tg);
+      await cmdRegister.loadCommands();
+      cmdRegister.watch();
 
-  const cmdRegister = new CommandRegisterTelegram(tg);
-  await cmdRegister.loadCommands();
-  cmdRegister.watch();
+      tg.on("message", async (ctx, next) => {
+          logTelegram(ctx);
+          return next();
+      });
+      tg.on("text", (ctx) => handleTelegramMessage(ctx, tg));
+      tg.catch((err) => logError("telegram:core", err));
 
-  tg.on("message", async (ctx, next) => {
-    logTelegram(ctx);
-    return next();
-  });
-
-  tg.on("text", (ctx) => handleTelegramMessage(ctx, tg));
-
-  tg.catch((err) => {
-    logError("telegram:middleware", err);
-  });
-
-  await tg.launch();
-  console.log(chalk.green("[TELEGRAM] Bot launched"));
-  return tg;
+      await tg.launch();
+      console.log(chalk.green("[TELEGRAM] Bot Launched Successfully"));
+      return tg;
+  } catch (e) {
+      console.error(chalk.red("[TELEGRAM] Gagal memulai:"), e.message);
+  }
 }
 
-// ---------- DISCORD ----------
+// discord bot
 async function startDiscord() {
   if (!has(config.discordToken) || !has(config.discordClientId)) {
-    console.warn("Missing discordToken or discordClientId in config.js, skipping Discord bot.");
-    return null;
+      console.warn(chalk.yellow("[DISCORD] Token/Client ID tidak ditemukan, melewati..."));
+      return;
   }
 
-  const dc = new Client({
-    intents: [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.MessageContent,
-    ],
-  });
+  try {
+      const dc = new Client({
+        intents: [
+          GatewayIntentBits.Guilds,
+          GatewayIntentBits.GuildMessages,
+          GatewayIntentBits.MessageContent,
+          GatewayIntentBits.GuildVoiceStates
+        ],
+      });
 
-  dc.botName = config.botName;
-  dc.ownerName = config.ownerName;
-  dc.id = config.discordClientId;
+      dc.botName = config.botName;
+      dc.musicQueues = new Map();
 
-  const cmdRegister = new CommandRegisterDiscord(dc);
-  
-  dc.once("ready", async () => {
-    console.log(chalk.green(`[DISCORD] Logged in as ${dc.user.tag}`));
-    await cmdRegister.loadCommands();
-    cmdRegister.watch();
-  });
+      const cmdRegister = new CommandRegisterDiscord(dc);
+      
+      dc.once("ready", async () => {
+        console.log(chalk.green(`[DISCORD] Logged in as ${dc.user.tag}`));
+        await cmdRegister.loadCommands();
+        cmdRegister.watch();
+      });
 
-  dc.on("interactionCreate", async (ix) => {
-      logDiscord(ix);
-      await handleDiscordInteraction(ix);
-  });
-dc.on("messageCreate", async (msg) => {
-      if (!msg.author || msg.author.bot) return; 
-      logDiscord(msg);
-      await handleDiscordMessage(msg);
-  });
-  
+      dc.on("interactionCreate", async (ix) => {
+          logDiscord(ix);
+          await handleDiscordInteraction(ix);
+      });
 
-  dc.on("error", (e) => logError("discord:client", e));
-  dc.on("warn", (e) => logError("discord:warn", new Error(String(e))));
-  dc.rest?.on?.("rateLimited", (info) => logError("discord:ratelimit", new Error(JSON.stringify(info))));
+      dc.on("messageCreate", async (msg) => {
+          if(!msg.author.bot) {
+              logDiscord(msg);
+              await handleDiscordMessage(msg);
+          }
+      });
+      
+      dc.on("error", (e) => logError("discord:client", e));
 
-  await dc.login(config.discordToken);
-  return dc;
+      await dc.login(config.discordToken);
+      return dc;
+  } catch (e) {
+      console.error(chalk.red("[DISCORD] Gagal memulai:"), e.message);
+  }
 }
 
-// ---------- WHATSAPP ----------
+// whatsapp
 async function startWhatsapp() {
-    const localStore = {
-        messages: {},
-        groupMetadata: {},
-        contacts: {}
-    };
-    
-    const logger = require("pino")({ level: "silent" });
-    const NodeCache = require("node-cache");
+    const sessionCleaner = new SessionCleaner("sessions");
+    const messageStore = new MessageStore("sessions");
+    const groupCache = new GroupCache(5 * 60 * 1000);
+
+    sessionCleaner.startAutoClean(); 
+    groupCache.startAutoCleanup(); 
+
+    const localStore = { messages: {}, groupMetadata: {} };
     const msgRetryCounterCache = new NodeCache();
-    
-    const groupCache = new NodeCache({ 
-        stdTTL: 5 * 60,
-        useClones: false 
-    });
 
     await CmdRegisWA.load();
     await CmdRegisWA.watch();
 
     const { state, saveCreds } = await useMultiFileAuthState("sessions");
     const { version, isLatest } = await fetchLatestBaileysVersion();
-    console.log(chalk.green(`[WHATSAPP] using WA v${version.join(".")}, isLatest: ${isLatest}`));
+    console.log(chalk.green(`[WHATSAPP] Menggunakan WA v${version.join(".")}, Latest: ${isLatest}`));
 
     const whatsapp = makeWASocket({
         version,
         printQRInTerminal: false,
-        logger,
+        logger: pino({ level: "silent" }),
         auth: {
             creds: state.creds,
-            keys: makeCacheableSignalKeyStore(state.keys, logger),
+            keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" }))
         },
         msgRetryCounterCache,
         generateHighQualityLinkPreview: true,
         getMessage: async (key) => {
+            const stored = messageStore.get(key.id);
+            if (stored) return stored.message || proto.Message.fromObject({});
             const jid = key.remoteJid;
             const msg = localStore.messages[jid]?.find(m => m.key.id === key.id);
             return msg?.message || proto.Message.fromObject({});
         },
-        cachedGroupMetadata: async (jid) => {
-            return groupCache.get(jid) || null;
-        },
+        cachedGroupMetadata: async (jid) => groupCache.get(jid),
     });
 
     if (!whatsapp.authState.creds.registered && has(config.whatsappNumber)) {
-        console.log(chalk.yellow(`[WHATSAPP] Sesi tidak ditemukan. Meminta pairing code untuk nomor ${config.whatsappNumber}...`));
         setTimeout(async () => {
             try {
+                console.log(chalk.yellow(`[WHATSAPP] Meminta Pairing Code untuk ${config.whatsappNumber}...`));
                 const code = await whatsapp.requestPairingCode(config.whatsappNumber);
-                console.log(chalk.green.bold(`[WHATSAPP] Pairing code Anda: ${code}`));
-                console.log(chalk.yellow("[WHATSAPP] Silakan masukkan kode ini di perangkat WhatsApp Anda."));
-            } catch (error) {
-                console.error(chalk.red("[WHATSAPP] Gagal meminta pairing code:"), error);
+                console.log(chalk.green.bold(`[WHATSAPP] KODE PAIRING: ${code}`));
+            } catch (e) {
+                console.error(chalk.red("[WHATSAPP] Gagal request pairing code:"), e.message);
             }
         }, 3000);
     }
 
     whatsapp.ev.process(async (events) => {
         if (events["connection.update"]) {
-            const { connection, lastDisconnect, qr } = events["connection.update"];
-            if (qr) console.log(chalk.yellow("[WHATSAPP] QR received (suppressed)."));
-
+            const { connection, lastDisconnect } = events["connection.update"];
+            
             if (connection === "close") {
                 const statusCode = lastDisconnect?.error?.output?.statusCode;
-                const shouldReconnect = (lastDisconnect.error instanceof Boom) && 
-                    statusCode !== DisconnectReason.loggedOut;
+                const shouldReconnect = (lastDisconnect.error instanceof Boom) && statusCode !== DisconnectReason.loggedOut;
                 
-                console.log(chalk.red(`[WHATSAPP] Connection closed: ${lastDisconnect.error}, reconnect: ${shouldReconnect}`));
+                console.log(chalk.red(`[WHATSAPP] Koneksi Terputus: ${lastDisconnect.error?.message || lastDisconnect.error}`));
                 
                 if (statusCode === DisconnectReason.loggedOut) {
-                    console.log(chalk.red.bold("\n[WHATSAPP FATAL] LOGGED OUT."));
-                    console.log(chalk.red("Delete 'sessions' folder and refill 'whatsappNumber' in config.js"));
-                    return;
+                    console.log(chalk.red.bold("[FATAL] Sesi Logout. Hapus folder 'sessions' dan scan ulang."));
                 } else if (shouldReconnect) {
+                    console.log(chalk.yellow("[WHATSAPP] Mencoba menyambung kembali dalam 3 detik..."));
+                    await delay(3000);
                     startWhatsapp();
                 }
             } else if (connection === "open") {
-                console.log(chalk.green("[WHATSAPP] Bot connected"));
+                console.log(chalk.green("[WHATSAPP] Terhubung ke Server WhatsApp"));
+                sessionCleaner.clean();
             }
         }
 
         if (events["creds.update"]) await saveCreds();
-
         if (events["messages.upsert"]) {
-            const upsert = events["messages.upsert"];
+            const { messages, type } = events["messages.upsert"];
             
-            if (localStore.groupMetadata && Object.keys(localStore.groupMetadata).length < 1) {
-                try {
-                    localStore.groupMetadata = await whatsapp.groupFetchAllParticipating();
-                } catch (error) {
-                    console.error("[WHATSAPP] Failed to fetch all groups:", error);
-                }
-            }
+            for (let msg of messages) {
+                if (!msg.message) continue;
 
-            for (let msg of upsert.messages) {
-                const jid = msg.key.participant ?? msg.key.remoteJid;
-                
+                const jid = msg.key.remoteJid;
+
+                messageStore.add(msg.key.id, {
+                    key: msg.key,
+                    message: msg.message,
+                    pushName: msg.pushName,
+                    sender: msg.key.participant || msg.key.remoteJid
+                });
                 if (jid) {
-                    if (!localStore.messages[jid]) {
-                        localStore.messages[jid] = [];
-                    }
+                    if (!localStore.messages[jid]) localStore.messages[jid] = [];
                     localStore.messages[jid].push(msg);
-                    
-                    if (localStore.messages[jid].length > 50) {
-                        localStore.messages[jid] = localStore.messages[jid].slice(-50);
-                    }
+                    if (localStore.messages[jid].length > 50) localStore.messages[jid].shift();
                 }
 
-                if (upsert.type === "notify" && msg.message) {
-                    const processedMessage = await procMsg(msg, whatsapp, localStore);
-                    if (!processedMessage) continue;
-
-                    if (processedMessage.isGroup) {
-                        const store = processedMessage?.metadata;
-                        if (store) {
-                            const metadata = await whatsapp.groupMetadata(processedMessage.chat);
-                            
-                            if (typeof store.ephemeralDuration === "undefined") {
-                                store.ephemeralDuration = 0;
-                            }
-                            
-                            if (store.ephemeralDuration !== metadata?.ephemeralDuration) {
-                                console.log(`[WHATSAPP] Ephemeral duration changed for ${processedMessage.chat}`);
-                                processedMessage.metadata = metadata;
-                                groupCache.set(processedMessage.chat, metadata);
+                if (type === "notify") {
+                    const processed = await procMsg(msg, whatsapp, localStore);
+                    if (!processed) continue;
+                    if (processed.isGroup) {
+                        let metadata = groupCache.get(processed.chat);
+                        if (!metadata) {
+                            try {
+                                metadata = await whatsapp.groupMetadata(processed.chat);
+                                groupCache.set(processed.chat, metadata);
+                            } catch (e) {
+                                console.error(`[WA-GROUP] Gagal fetch metadata ${processed.chat}`);
                             }
                         }
+                        if (metadata) processed.metadata = metadata;
                     }
-
-                    const originalSendMessage = whatsapp.sendMessage.bind(whatsapp);
-                    whatsapp.sendMessage = async (jid, content, options = {}) => {
-                        return originalSendMessage(jid, content, {
-                            ...options,
-                            ephemeralExpiration: processedMessage.isGroup
-                                ? (processedMessage.metadata?.ephemeralDuration || null)
-                                : (processedMessage.message[processedMessage.type]?.contextInfo?.expiration || null),
-                        });
-                    };
-
-                    await handlerWA.handleCommand(processedMessage, whatsapp, localStore, config);
-                    prMsg(processedMessage);
+                    await handlerWA.handleCommand(processed, whatsapp, localStore, config);
+                    prMsg(processed);
                 }
             }
         }
-
         if (events["groups.update"]) {
-            const updates = events["groups.update"];
-            for (const update of updates) {
-                const id = update.id;
-                if (!id) continue;
-                
+            for (const update of events["groups.update"]) {
                 try {
-                    const metadata = await whatsapp.groupMetadata(id);
-                    groupCache.set(id, metadata);
-                    localStore.groupMetadata[id] = metadata;
-                    console.log(`[GROUPS.UPDATE] Updated ${id}`);
-                } catch (error) {
-                    console.error(`[GROUPS.UPDATE] Error updating group ${id}:`, error.message);
-                }
+                    console.log(chalk.cyan(`[WA-GROUP] Update terdeteksi pada ${update.id}`));
+                    const metadata = await whatsapp.groupMetadata(update.id);
+                    groupCache.set(update.id, metadata);
+                } catch {}
             }
         }
-
-        // 🔥 IMPROVED: Better participant updates
         if (events["group-participants.update"]) {
             const { id, participants, action } = events["group-participants.update"];
-            
-            if (id) {
-                try {
-                    const metadata = await whatsapp.groupMetadata(id);
-                    groupCache.set(id, metadata);
-                    localStore.groupMetadata[id] = metadata;
-                    console.log(`[GROUP-PARTICIPANTS.UPDATE] ${action} in ${id}: ${participants.length} users`);
-                } catch (error) {
-                    console.error(`[GROUP-PARTICIPANTS.UPDATE] Error:`, error.message);
-                }
-            }
+            console.log(chalk.cyan(`[WA-GROUP] ${action} -> ${participants.length} members di ${id}`));
+            try {
+                const metadata = await whatsapp.groupMetadata(id);
+                groupCache.set(id, metadata);
+            } catch {}
         }
     });
 
     return whatsapp;
 }
 
-// ---------- BOOT ----------
 (async () => {
   if (!showWelcome()) return;
-  await delay(2000);
-  try {
-    console.log(chalk.yellow("🔔 Memulai koneksi ke platform yang diaktifkan..."));
-    
-    const platformPromises = [];
-    
-    if (config.enableTelegram && has(config.telegramToken)) {
-        platformPromises.push(startTelegram());
-    }
-    if (config.enableDiscord && has(config.discordToken) && has(config.discordClientId)) {
-        platformPromises.push(startDiscord());
-    }
-    if (config.enableWhatsApp) {
-        platformPromises.push(startWhatsapp());
-    }
+  
+  await delay(1000);
+  console.log(chalk.yellow("Memulai Menjalankan Bot..."));
 
-    await Promise.all(platformPromises);
-    console.log(chalk.yellow("🚀 Semua platform yang aktif telah terhubung."));
+  try {
+    const promises = [];
+
+    if (config.enableTelegram) promises.push(startTelegram());
+    if (config.enableDiscord) promises.push(startDiscord());
+    if (config.enableWhatsApp) promises.push(startWhatsapp());
+
+    await Promise.all(promises);
     
+    console.log(chalk.green.bold("\n[SYSTEM] Semua bot berhasil dijalankan!\n"));
   } catch (e) {
-    logError("bootstrap", e);
-    process.exitCode = 1;
+    logError("BOOTSTRAP", e);
+    process.exit(1);
   }
 })();
-
 process.on("unhandledRejection", (e) => logError("unhandledRejection", e));
 process.on("uncaughtException", (e) => logError("uncaughtException", e));

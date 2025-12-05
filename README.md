@@ -31,6 +31,7 @@ Dilengkapi dengan **AiDev** (Asisten Coding berbasis Gemini AI), **Media Downloa
 | 📥 **Universal Downloader** | Download video **TikTok** (No WM), YouTube, dan platform lainnya dengan cepat. | ✅ Semua |
 | 🖼️ **Image Tools** | HD/Upscale gambar, Fake Story Generator, dan manipulasi gambar lainnya. | ✅ Semua |
 | 🎮 **Fun & RPG** | Sistem tabungan, tebak-tebakan, dan fitur interaktif grup. | ✅ WA |
+| 🔌 **Modular System** | Tambah fitur cukup dengan membuat file `.js` baru di folder plugins. | ⚙️ Core |
 | 🔄 **Hot-Reload** | Update script plugin secara *real-time* tanpa restart server. | ⚙️ Core |
 
 ---
@@ -48,7 +49,7 @@ Sebelum memulai, pastikan Anda telah menginstal:
 
 1.  **Clone Repository**
     ```bash
-    git clone https://github.com/FlowFalcon/Lilith-Bot-s.git
+    git clone [https://github.com/FlowFalcon/Lilith-Bot-s.git](https://github.com/FlowFalcon/Lilith-Bot-s.git)
     cd Lilith-Bot-s
     ```
 
@@ -58,7 +59,7 @@ Sebelum memulai, pastikan Anda telah menginstal:
     ```
 
 3.  **Konfigurasi Bot**
-    edit file `config.js`:
+    Salin file `config.js.example` (jika ada) atau edit langsung `config.js`:
     ```javascript
     global.config = {
       // --- PLATFORM SWITCH ---
@@ -104,7 +105,7 @@ lilith-bot/
 │   │   ├── discord/      # Plugin khusus Discord
 │   │   ├── telegram/     # Plugin khusus Telegram
 │   │   └── whatsapp/     # Plugin khusus WhatsApp
-│   ├── sessions/         # Penyimpanan sesi login (WA)
+│   ├── sessions/         # Penyimpanan sesi login (WA/Tele)
 │   ├── config.js         # Konfigurasi utama
 │   └── index.js          # Main entry point
 └── package.json
@@ -116,8 +117,8 @@ lilith-bot/
 
 Sistem plugin Lilith Bot sangat fleksibel. Berikut adalah contoh cara membuat fitur sederhana.
 
-<details>
-<summary><b>🟢 Klik untuk melihat contoh Plugin WhatsApp</b></summary>
+\<details\>
+\<summary\>\<b\>🟢 Klik untuk melihat contoh Plugin WhatsApp\</b\>\</summary\>
 
 Buat file baru di `bot/plugins/whatsapp/contoh.js`:
 
@@ -134,10 +135,10 @@ handler.help = ["halo"];          // Deskripsi di menu
 module.exports = handler;
 ```
 
-</details>
+\</details\>
 
-<details>
-<summary><b>🔵 Klik untuk melihat contoh Plugin Telegram</b></summary>
+\<details\>
+\<summary\>\<b\>🔵 Klik untuk melihat contoh Plugin Telegram\</b\>\</summary\>
 
 Buat file baru di `bot/plugins/telegram/contoh.js`:
 
@@ -153,12 +154,12 @@ handler.help = ["halo"];
 module.exports = handler;
 ```
 
-</details>
+\</details\>
 
-<details>
-<summary><b>🟣 Klik untuk melihat contoh Plugin Discord</b></summary>
+\<details\>
+\<summary\>\<b\>🟣 Klik untuk melihat contoh Plugin Discord\</b\>\</summary\>
 
-Buat file baru di `bot/plugins/discord/contoh.js`. Script ini mendukung **Slash Command** (`/halo`) dan **Prefix** (`.halo`) sekaligus!
+Buat file baru di `bot/plugins/discord/contoh.js`. Script ini mendukung **Slash Command** (`/halo`) dan **Prefix** (`.halo`) sekaligus\!
 
 ```javascript
 let handler = async (msgOrCtx, args) => {
@@ -173,13 +174,13 @@ handler.tags = ["main"];
 module.exports = handler;
 ```
 
-</details>
+\</details\>
 
 -----
 
 ## 🤝 Kontribusi & Credits
 
-Dibuat dengan ❤️ oleh **Fathur**.
+Dibuat dengan ❤️ oleh **Fathur** (FlowFalcon).
 Terima kasih kepada komunitas open-source untuk library luar biasa:
 
   * [Baileys](https://github.com/WhiskeySockets/Baileys)

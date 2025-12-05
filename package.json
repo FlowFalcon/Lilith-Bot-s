@@ -1,6 +1,6 @@
 {
   "name": "lilith-bot's",
-  "version": "1.3.1",
+  "version": "2.0.0",
   "description": "a bot telegram & discord & whatsapp multi purpose",
   "main": "index.js",
   "scripts": {
@@ -11,10 +11,12 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@discordjs/voice": "^0.18.0",
     "@hapi/boom": "^9.1.4",
     "adm-zip": "^0.5.16",
     "axios": "^1.12.2",
-    "baileys": "^7.0.0-rc.6",
+    "baileys": "^7.0.0-rc.9",
+    "canvas": "^2.11.2",
     "chalk": "^4.1.2",
     "cheerio": "1.1.2",
     "chokidar": "^3.5.3",
@@ -23,8 +25,10 @@
     "human-readable": "^0.2.1",
     "jimp": "^1.6.0",
     "jsdom": "^22.1.0",
-    "liora-lib": "^1.2.3",
+    "libsodium-wrappers": "^0.7.15",
+    "moment-timezone": "^0.6.0",
     "node-cache": "^5.1.2",
+    "or": "^0.2.0",
     "pino": "^8.15.0",
     "qrcode-terminal": "^0.12.0",
     "sharp": "^0.34.3",

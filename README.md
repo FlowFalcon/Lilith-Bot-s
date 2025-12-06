@@ -41,7 +41,9 @@ Sebelum memulai, pastikan Anda telah menginstal:
 * [Node.js](https://nodejs.org/en/download/) (Versi 20 atau lebih baru)
 * [FFmpeg](https://ffmpeg.org/download.html) (Untuk manipulasi media video/audio)
 * Git
-
+* Javascript & NodeJS basic skill
+  > DON'T BE AN IDIOT
+  
 ---
 
 ## 🚀 Instalasi & Penggunaan
